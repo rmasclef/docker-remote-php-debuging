@@ -1,0 +1,26 @@
+FROM php:7.2-fpm
+
+RUN apt-get update && apt-get install -y \
+#    libpq-dev \
+#    libmemcached-dev \
+    zip
+#    curl
+
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug
+
+#COPY ./xdebug.ini /usr/local/etc/php/conf.d/
+
+# Install composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN mkdir /var/composer
+ENV COMPOSER_HOME /var/composer
+ENV COMPOSER_ALLOW_SUPERUSER 1
+
+RUN mkdir -p /var/www/TEST_APP
+WORKDIR /var/www/TEST_APP
+
+# Install PHP configuration
+ADD xdebug.ini /etc/php/conf.d/
+
+CMD ["php-fpm"]

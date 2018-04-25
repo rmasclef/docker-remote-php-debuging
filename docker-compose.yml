@@ -1,0 +1,11 @@
+version: '3'
+services:
+  test_app:
+    build:
+        context: ./
+        dockerfile: DockerFile
+    volumes:
+        - "./:/var/www/TEST_APP:cached"
+        - "~/.composer:/var/composer:cached"
+    environment:
+        PHP_IDE_CONFIG: serverName=test-app
